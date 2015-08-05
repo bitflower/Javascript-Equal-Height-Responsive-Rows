@@ -3,7 +3,9 @@ A simple jQuery plugin to keep elements the same height, supporting resizing and
 Install via bower
 -----
 
+```
 bower install javascript-equal-height-responsive-rows
+```
 
 Usage
 -----
@@ -71,6 +73,11 @@ If you would like to keep the grids in sync on document ready, window load and r
 $('.group-of-elements').responsiveEqualHeightGrid();
 ```
 
+To clean up, you can call a destroy method.
+
+```
+$('.group-of-elements').responsiveEqualHeightGridDestroy();
+```
 
 The MIT License (MIT)
 

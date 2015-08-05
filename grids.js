@@ -1,3 +1,7 @@
+/**
+ * Javascript-Equal-Height-Responsive-Rows
+ * https://github.com/Sam152/Javascript-Equal-Height-Responsive-Rows
+ */
 (function($) {
   'use strict';
 
@@ -26,7 +30,7 @@
      * Create a grid of equal height elements.
      */
     $.fn.equalHeightGrid = function(columns) {
-        var $tiles = this;
+        var $tiles = this.filter(':visible');
         $tiles.css('height', 'auto');
         for (var i = 0; i < $tiles.length; i++) {
             if (i % columns === 0) {
@@ -45,8 +49,9 @@
      */
     $.fn.detectGridColumns = function() {
         var offset = 0,
-            cols = 0;
-        this.each(function(i, elem) {
+            cols = 0,
+            $tiles = this.filter(':visible');
+        $tiles.each(function(i, elem) {
             var elemOffset = $(elem).offset().top;
             if (offset === 0 || elemOffset === offset) {
                 cols++;
@@ -61,15 +66,28 @@
     /**
      * Ensure equal heights now, on ready, load and resize.
      */
+    var grids_event_uid = 0;
     $.fn.responsiveEqualHeightGrid = function() {
         var _this = this;
-
+        var event_namespace = '.grids_' + grids_event_uid;
+        _this.data('grids-event-namespace', event_namespace);
         function syncHeights() {
             var cols = _this.detectGridColumns();
             _this.equalHeightGrid(cols);
         }
-        $(window).bind('resize load', syncHeights);
+        $(window).bind('resize' + event_namespace + ' load' + event_namespace, syncHeights);
         syncHeights();
+        grids_event_uid++;
+        return this;
+    };
+
+    /**
+     * Unbind created events for a set of elements.
+     */
+    $.fn.responsiveEqualHeightGridDestroy = function() {
+        var _this = this;
+        _this.css('height', 'auto');
+        $(window).unbind(_this.data('grids-event-namespace'));
         return this;
     };
 
